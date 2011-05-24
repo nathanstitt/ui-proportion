@@ -1,0 +1,21 @@
+
+.ui-proportion-label {
+    display: inline-block;
+    height: 1.5em;
+    position: absolute;
+    bottom: 0.8em;
+    left: 50%;
+    border-style: solid none none solid;
+    margin-bottom: 1px;
+    width: 8px;
+    -webkit-border-top-left-radius: 8px;
+    -moz-border-radius-topleft: 8px;
+    border-top-left-radius: 8px;
+
+}
+
+.ui-proportion-label .ui-label {
+    position: absolute;
+    bottom: 0px;
+    left: 10px;
+}
