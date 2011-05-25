@@ -5,17 +5,44 @@
     position: absolute;
     bottom: 0.8em;
     left: 50%;
-    border-style: solid none none solid;
     margin-bottom: 1px;
     width: 8px;
+}
+
+.ui-proportion-label.right {
+    border-style: solid none none solid;
     -webkit-border-top-left-radius: 8px;
     -moz-border-radius-topleft: 8px;
     border-top-left-radius: 8px;
+}
 
+.ui-proportion-label.left {
+    border-style: solid solid none none;
+    -webkit-border-top-right-radius: 8px;
+    -moz-border-radius-topright: 8px;
+    border-top-right-radius: 8px;
 }
 
 .ui-proportion-label .ui-label {
     position: absolute;
-    bottom: 0px;
-    left: 10px;
+    top:-10px;
+    margin: 0px;
+    padding: 0px;
+    z-index: 1;
+    border-style: solid;
+
+    padding: 0px 5px;
+
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+    
+}
+
+.ui-proportion-label.right .ui-label {
+   left: 9px;
+}
+
+.ui-proportion-label.left .ui-label {
+   right: 9px;
 }

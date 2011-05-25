@@ -7,43 +7,53 @@
         };
         Label.prototype.render = function(){
                 this.el = $('<div class="ui-widget-content ui-proportion-label" style="left:' +
-                            this.position + '%"><p class="ui-label">' + this.name + '</p></div>');
+                            this.position + '%"><p class="ui-widget-content ui-label">' + this.name + '</p></div>');
                 return this;
         };
-        Label.prototype.setPosition = function( pos ){
+        Label.prototype.setPosition = function( pos, height, right ){
                 this.position = pos;
                 if ( ! this.el ){
                         this.render();
                 }
-                this.el.css('left', pos + '%' );
+                this.el.css('left', pos + '%' ).
+                        css('height', (height+1)*12 + 'px' ).
+                        toggleClass( 'right', right ).
+                        toggleClass( 'left', ! right );
                 return this;
         };
         Label.prototype.destroy = function(){
                 this.el.remove();
                 return this;
         };
-        
+
         var Slider = function(el, opts ){
                 this.el = el;
                 this.labels = [];
                 this.options = opts;
                 this.setLabels( this.options.labels || [] );
-
         };
-        Slider.prototype.onSlide = function(){
-                var ttl = 0, pos,handle;
-                for ( var i=0, handles=this.el.find('.ui-slider-handle'), len=handles.length; i< len; i++){
-                        handle = $(handles[i]);
-                        pos = parseInt(handle.css('left'));
-                        ttl += pos;
-                        var perc = ttl - ( pos/2 );
-//                        console.log("Setting " + i + " pos: " + pos + ' perc: ' + perc );
-                        this.labels[i].setPosition(  perc );
-//                        console.log( "Total: " + ttl );
+
+        Slider.prototype.onSlide = function(ev,ui){
+                if ( ui ){
+                        var indx = ui.values.indexOf( ui.value );
+                        if ( indx && ( ui.value < ui.values[indx-1] || ui.value > ui.values[indx+1] ) ){
+                                return false;
+                        }
                 }
-                pos = ttl + ( ( 100 - ttl ) / 2 );
-//                console.log( "Last set to: " + pos );
-                this.labels[i].setPosition( pos );
+                var last = 0, pos;
+                for ( var i=0, handles=this.el.find('.ui-slider-handle'), len=handles.length; i< len; i++){
+                        
+                        pos = parseInt( $(handles[i]).css('left') );
+                        var perc = last + ( ( pos - last ) / 2 );
+                        console.log("Setting " + i + ' last: ' + last + " pos: " + pos + ' perc: ' + perc );
+                        var asc = i<len/2;
+                        this.labels[i].setPosition(  perc, asc ? i+1 : len+1-i, asc );
+                        last = pos;
+                }
+                pos = last + ( (100 - last) / 2 );
+                console.log( "Last set to: " + pos );
+                this.labels[i].setPosition( pos, 1, false );
+                return true;
         };
 
         Slider.prototype.setLabels = function( new_labels ){
