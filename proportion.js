@@ -1,6 +1,6 @@
 (function( $, undefined ){
-
-        var Label = function( opts ){
+        
+       var Label = function( opts ){
                 this.name  = 'object' == typeof(opts) ? opts.name : opts;
                 this.position = '50%';
                 
@@ -23,17 +23,54 @@
         };
         Label.prototype.destroy = function(){
                 this.el.remove();
-                return this;
         };
+ 
+$.widget("ui.proportion", {
 
-        var Slider = function(el, opts ){
-                this.el = el;
+         options: { 
+                 max: 100
+         },
+        _create: function(){
                 this.labels = [];
-                this.options = opts;
                 this.setLabels( this.options.labels || [] );
-        };
+        },
+        _setOption: function( key, value ) {
+                switch( key ) {
 
-        Slider.prototype.onSlide = function(ev,ui){
+                    case "max":
+                        this.element.slider('option','max', value );
+                        this.options.max = value;
+                        break;
+                    case "labels":
+                        this.setLabels( value );
+                        break;
+                }
+                // In jQuery UI 1.8, you have to manually invoke the _setOption method from the base widget
+                $.Widget.prototype._setOption.apply(this,arguments);
+                
+                // In jQuery UI 1.9 and above, you use the _super method instead
+                if ( 'function' == typeof(this._super) ){
+                        this._super( "_setOption", key, value );
+                }
+        },
+ 
+        // Use the destroy method to clean up any modifications your widget has made to the DOM 
+
+        destroy: function() {
+               
+                for ( var i=0,len=this.labels.length; i < len; ++i ){
+                        this.labels[i].destroy();
+                }
+                this.element.slider('destroy');
+
+                // In jQuery UI 1.8, you must use invoke the destroy method from the base widget
+
+                $.Widget.prototype.destroy.call(this);
+                // In jQuery UI 1.9 and above, this step is not necessary
+                return this;
+        },
+
+        _onSlide: function(ev,ui){
                 if ( ui ){
                         var indx = ui.values.indexOf( ui.value );
                         if ( indx && ( ui.value < ui.values[indx-1] || ui.value > ui.values[indx+1] ) ){
@@ -41,7 +78,7 @@
                         }
                 }
                 var last = 0, pos;
-                for ( var i=0, handles=this.el.find('.ui-slider-handle'), len=handles.length; i< len; i++){
+                for ( var i=0, handles=this.element.find('.ui-slider-handle'), len=handles.length; i< len; i++){
                         
                         pos = parseInt( $(handles[i]).css('left') );
                         var perc = last + ( ( pos - last ) / 2 );
@@ -54,9 +91,8 @@
                 console.log( "Last set to: " + pos );
                 this.labels[i].setPosition( pos, 1, false );
                 return true;
-        };
-
-        Slider.prototype.setLabels = function( new_labels ){
+        },
+        setLabels: function( new_labels ){
                 this.destroy();
                 this.labels = [];
                 var handles=[],
@@ -82,64 +118,61 @@
                         }
                         ttl += width;
                         this.labels.push( label );
-                        this.el.append( label.render().el );
+                        this.element.append( label.render().el );
                 }
                 
                 if ( handles.length ){
-                        this.el.slider({
+                        this.element.slider({
                                 values: handles,
-                                slide: jQuery.proxy(this.onSlide,this)
+                                slide: jQuery.proxy(this._onSlide,this)
                         });
                 } else {
-                        this.el.slider().find('.ui-slider-handle').remove();
+                        this.element.slider().find('.ui-slider-handle').remove();
                         
                 }
-                this.onSlide();
+                this._onSlide();
                 return this;
-        };
-        Slider.prototype.destroy = function(){
-                
-                for ( var i=0,len=this.labels.length; i < len; ++i ){
-                        this.labels[i].destroy();
-                }
-                this.el.slider('destroy');
-                return this;
-        };
-        
-    $.fn.proportion = function( options ) {
-        
-                var args     = arguments,
-                    defaults = {
-                        'max'         : 100
-                    };
-                    
-                if ( options ) { 
-                        $.extend( defaults, options );
-                } else {
-                        options = defaults;
-                }
-                
-                return this.each(function() {
-                        var $this = $(this),
-                            obj = $this.data('proportion');
+        }
 
-                        if ( ! args.length || 'object' == typeof( args[0] ) ) {
-                                if ( obj ){
-                                        obj.destroy();
-                                }
-                                obj = new Slider( $this, options );
-                                $(this).data('proportion',obj);
-                        } else if ( args.length && 'string' == typeof(args[0]) ){
-                                if ( obj && obj[ args[0] ] ) {
-                                        return obj[ args[0] ].apply( obj, Array.prototype.slice.call( args, 1 ) );
-                                } else {
-                                        $.error( 'Method ' +  args[0] + ' does not exist on jQuery.proportion' );
-                                }
-                        } else {
-                                $.error( 'invalid arguments to initialize jQuery.proportion' );
-                        }
-                        return this;
-                });
-        };
+});
+        
+     
+
+        
+    // $.fn.proportion = function( options ) {
+        
+    //             var args     = arguments,
+    //                 defaults = {
+    //                     'max'         : 100
+    //                 };
+                    
+    //             if ( options ) { 
+    //                     $.extend( defaults, options );
+    //             } else {
+    //                     options = defaults;
+    //             }
+                
+    //             return this.each(function() {
+    //                     var $this = $(this),
+    //                         obj = $this.data('proportion');
+
+    //                     if ( ! args.length || 'object' == typeof( args[0] ) ) {
+    //                             if ( obj ){
+    //                                     obj.destroy();
+    //                             }
+    //                             obj = new Slider( $this, options );
+    //                             $(this).data('proportion',obj);
+    //                     } else if ( args.length && 'string' == typeof(args[0]) ){
+    //                             if ( obj && obj[ args[0] ] ) {
+    //                                     return obj[ args[0] ].apply( obj, Array.prototype.slice.call( args, 1 ) );
+    //                             } else {
+    //                                     $.error( 'Method ' +  args[0] + ' does not exist on jQuery.proportion' );
+    //                             }
+    //                     } else {
+    //                             $.error( 'invalid arguments to initialize jQuery.proportion' );
+    //                     }
+    //                     return this;
+    //             });
+    //     };
 
 })( jQuery );
