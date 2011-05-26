@@ -19,6 +19,7 @@
                         this.render();
                 }
                 this.el.css('left', pos + '%' ).
+                        css('bottom', ( this.el.closest('.ui-slider').height()-2 ) + 'px' ).
                         html( this.visibleString() ).
                         css('marginLeft', '-'+ (this.el.width() / 2 ) + 'px');
                 
@@ -61,15 +62,18 @@ $.widget("ui.proportion", {
  
         // Use the destroy method to clean up any modifications your widget has made to the DOM 
 
-        destroy: function() {
+        _clear: function(){
+               if ( this.element.data('slider') ){
+                        this.element.slider('destroy');
+                }
                 for ( var i=0,len=this.labels.length; i < len; ++i ){
                         this.labels[i].destroy();
                 }
                 this.labels = [];
-                this.element.slider('destroy');
-
+        },
+        destroy: function() {
+                this._clear();
                 // In jQuery UI 1.8, you must use invoke the destroy method from the base widget
-
                 $.Widget.prototype.destroy.call(this);
                 // In jQuery UI 1.9 and above, this step is not necessary
                 return this;
@@ -87,14 +91,12 @@ $.widget("ui.proportion", {
                 for ( var i=0, handles=this.element.find('.ui-slider-handle'), len=handles.length; i< len; i++){
                         pos = parseFloat( $(handles[i]).css('left') );
                         var perc = last + ( ( pos - last ) / 2 );
-                        console.log("Setting " + i + ' last: ' + last + " pos: " + pos + ' perc: ' + perc );
                         var asc = i<len/2;
                         this.labels[i].update(  perc, this.valueFromPercent( pos-last ) );
                         
                         last = pos;
                 }
                 pos = last + ( (100 - last) / 2 );
-//                console.log( "Last set to: " + pos );
                 this.labels[i].update( pos, this.valueFromPercent( 100-last ) );
                 return true;
         },
@@ -113,38 +115,29 @@ $.widget("ui.proportion", {
         },
 
         setLabels: function( new_labels ){
-                this.element.slider('destroy');
-                for ( var i=0,len=this.labels.length; i < len; ++i ){
-                        this.labels[i].destroy();
-                }
-
-                this.labels = [];
+                this._clear();
                 var handles=[],
                     ttl = 0,
                     scaleFactor = 100 / this.options.max,
                     name, width;
-                
-                for ( i=0,len=new_labels.length; i < len; i++ ){
-
+                for ( var i=0,len=new_labels.length; i < len; i++ ){
                         if ('object' == typeof( new_labels[i] ) ){
                                 name  = new_labels[i].name;
                                 width = new_labels[i].value*scaleFactor;
                         } else {
                                 name = new_labels[i];
-                                width = 100 / len * i;
+                                width = ( this.options.max / len )*scaleFactor;
+                               
                         }
-
                         var label = new Label( new_labels[i] );
-
-//                        console.log( name + ' value: ' + new_labels[i].value + ' width: ' + width + ' ttl: ' + ttl );
+                        
                         if ( this.labels.length ){
-                                handles.push( this.options.max *  ttl / 100 );
+                                handles.push( this.options.max *  ( ttl / 100 ) );
                         }
                         ttl += width;
                         this.labels.push( label );
                         this.element.append( label.render().el );
                 }
-                
                 if ( handles.length ){
                         this.element.slider({
                                 max: this.options.max || 100,
