@@ -6,24 +6,22 @@
                this.position = '50%';
         };
         Label.prototype.render = function(){
-                this.el = $('<div class="ui-widget-content ui-proportion-label" style="left:' + this.position + '%">' +
-                            '<p class="ui-widget-content ui-label"></p></div>');
+                this.el = $('<p class="ui-widget-content ui-proportion-label"></p>');
                 return this;
         };
         Label.prototype.visibleString = function(){
                 return ( 'function' == typeof(this.renderer) ? this.renderer(this) : this.name );
         };
-        Label.prototype.update = function( pos, height, right, value ){
+        Label.prototype.update = function( pos, value ){
                 this.value = value;
                 this.position = pos;
                 if ( ! this.el ){
                         this.render();
                 }
                 this.el.css('left', pos + '%' ).
-                        css('height', (height+1)*12 + 'px' ).
-                        toggleClass( 'right', right ).
-                        toggleClass( 'left', ! right ).
-                        find('p').html( this.visibleString() );
+                        html( this.visibleString() ).
+                        css('marginLeft', '-'+ (this.el.width() / 2 ) + 'px');
+                
                 return this;
         };
         Label.prototype.destroy = function(){
@@ -91,13 +89,13 @@ $.widget("ui.proportion", {
                         var perc = last + ( ( pos - last ) / 2 );
                         console.log("Setting " + i + ' last: ' + last + " pos: " + pos + ' perc: ' + perc );
                         var asc = i<len/2;
-                        this.labels[i].update(  perc, asc ? i+1 : len+1-i, asc, this.valueFromPercent( pos-last ) );
+                        this.labels[i].update(  perc, this.valueFromPercent( pos-last ) );
                         
                         last = pos;
                 }
                 pos = last + ( (100 - last) / 2 );
 //                console.log( "Last set to: " + pos );
-                this.labels[i].update( pos, 1, false, this.valueFromPercent( 100-last ) );
+                this.labels[i].update( pos, this.valueFromPercent( 100-last ) );
                 return true;
         },
         valueFromPercent:function( perc ){
@@ -161,44 +159,5 @@ $.widget("ui.proportion", {
         }
 
 });
-        
-     
-
-        
-    // $.fn.proportion = function( options ) {
-        
-    //             var args     = arguments,
-    //                 defaults = {
-    //                     'max'         : 100
-    //                 };
-                    
-    //             if ( options ) { 
-    //                     $.extend( defaults, options );
-    //             } else {
-    //                     options = defaults;
-    //             }
-                
-    //             return this.each(function() {
-    //                     var $this = $(this),
-    //                         obj = $this.data('proportion');
-
-    //                     if ( ! args.length || 'object' == typeof( args[0] ) ) {
-    //                             if ( obj ){
-    //                                     obj.destroy();
-    //                             }
-    //                             obj = new Slider( $this, options );
-    //                             $(this).data('proportion',obj);
-    //                     } else if ( args.length && 'string' == typeof(args[0]) ){
-    //                             if ( obj && obj[ args[0] ] ) {
-    //                                     return obj[ args[0] ].apply( obj, Array.prototype.slice.call( args, 1 ) );
-    //                             } else {
-    //                                     $.error( 'Method ' +  args[0] + ' does not exist on jQuery.proportion' );
-    //                             }
-    //                     } else {
-    //                             $.error( 'invalid arguments to initialize jQuery.proportion' );
-    //                     }
-    //                     return this;
-    //             });
-    //     };
 
 })( jQuery );
