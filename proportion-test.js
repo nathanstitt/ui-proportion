@@ -37,6 +37,15 @@ $(document).ready(function(){
                         equals( round10th(slider.width() / label.position().left), 2.0, 'Label positioned in middle');
                 });
 
+                test("labels can be just names",function(){
+                        $('#slider').proportion({ max: 600, labels: ['One','Two','Three'] });
+                        var labels = $('#slider').proportion('getLabels');
+                        
+                        equals( $(".ui-proportion-label").length, 3 );
+                        equals( labels[0].value, 200 );
+                        
+                });
+
                 test("creates multiple handles & labels", function(){
                         var opts={ max: 500, labels: [
                                         { name: 'First', value: 200 },
@@ -112,10 +121,11 @@ $(document).ready(function(){
                                         { name : 'Second',  value: 300, renderer: r  },
                                         { name : 'Third',   value: 200, renderer: r  } ] },
                             slider=$('#slider').proportion( opts );
-                        equals( $(".ui-label:contains('First-100')").length, 1 );
-                        equals( $(".ui-label:contains('Second-300')").length, 1 );
-                        equals( $(".ui-label:contains('Third-200')").length, 1 );
+                        equals( $(".ui-proportion-label:contains('First-100')").length, 1 );
+                        equals( $(".ui-proportion-label:contains('Second-300')").length, 1 );
+                        equals( $(".ui-proportion-label:contains('Third-200')").length, 1 );
                 });
+
         });
         
 });
