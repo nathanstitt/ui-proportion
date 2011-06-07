@@ -1,9 +1,11 @@
-This is what I've dubbed a proportion widget.  I've not seen one used before on the interwebs, but find it useful for the case where you need to split a given value into multiple pieces.
+   This is an implementation of what I call a proportion widget.  I'ts useful for the cases where you need to split a given value into multiple pieces.
 
-It's implemented as a slider with multiple handles and labels in between the handles. As a handle's are dragged, labels are moved to represent the values of the inner space between them.
+      It's implemented as a slider with multiple handles and labels in between the handles. As a handle's are dragged, labels are moved to represent the values of the inner space between them.
 
-It's a follow up to the proportion widget I wrote for the prototype based scripty2 library, except written for the JQuery UI slider.
+      It's a follow up to the proportion widget I wrote several years ago for the prototype based scripty2 library, except written for the JQuery UI slider.
 
-It's still very fresh, and is still in testing mode internally.  Use at your own risk, etc.
+      It's still very new and being tested internally.  It has not been used it on a live site yet.  Use at your own risk, etc.
 
-Nathan
+      You can view an example of it on my site at: http://nathan.stitt.org/ui-proportion/
+
+      Nathan
