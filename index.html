@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head> 
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" /> 
+    <title>Proportion plugin test</title> 
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script> 
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script> 
+    <script src="proportion.js"></script>
+    <script src="proportion-test.js"></script>
+    <script src="qunit.js"></script>
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/start/jquery-ui.css" type="text/css" media="screen"/> 
+    <link rel="stylesheet" href="proportion.css" type="text/css" media="screen"/> 
+    <link rel="stylesheet" href="qunit.css" type="text/css" media="screen"/> 
+    <style>
+      #values {
+      margin: 0 auto;
+      display: inline-block;
+      text-align: left;
+      }
+      #values input {
+      width: 30px;
+      text-align: right;
+      }
+      #slider {
+      width: 80%;
+      margin: 50px auto 30px auto;
+      }
+    </style>
+  </head>
+  <body>
+    <p>
+      This is an implementation of what I call a proportion widget.  I'ts useful for the cases where you need to split a given value into multiple pieces.
+      </p><p>
+      It's implemented as a slider with multiple handles and labels in between the handles. As a handle's are dragged, labels are moved to represent the values of the inner space between them.
+      </p><p>
+      It's a follow up to the proportion widget I wrote several years ago for the prototype based scripty2 library, except written for the JQuery UI slider.
+      </p><p>
+      It's still very new and being tested internally.  It has not been used it on a live site yet.  Use at your own risk, etc.
+      </p><p>
+      Nathan
+    </p>
+    <div id="slider"></div>
+    <div style="text-align:center;">
+      <div id="values">
+      </div>
+    </div>
+    <h1 id="qunit-header">QUnit example</h1>
+    <h2 id="qunit-banner"></h2>
+    <div id="qunit-testrunner-toolbar"></div>
+    <h2 id="qunit-userAgent"></h2>
+    <ol id="qunit-tests"></ol>
+    <div id="qunit-fixture">test markup, will be hidden</div>
+  </body>
+</html>
+
