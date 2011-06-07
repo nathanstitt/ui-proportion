@@ -1,6 +1,14 @@
 
-$(document).ready(function(){
-        
+$(document).ready(function($,undefined){
+
+        $(document).bind('slide',function(ev,ui){
+                var labels = $(ev.target).proportion('getLabels'),
+                    res = [];
+                for ( var i=0, len=labels.length; i<len; i++ ){
+                        res.push( '<input value="' + labels[i].value + '">' + labels[i].name );
+                }
+                $('#values').html( res.join('<br/>')  );
+        });
         function round10th( num ){
                 return Math.round( 10 *  num ) / 10;
         };
