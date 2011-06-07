@@ -93,11 +93,12 @@ $.widget("ui.proportion", {
                         var perc = last + ( ( pos - last ) / 2 );
                         var asc = i<len/2;
                         this.labels[i].update(  perc, this.valueFromPercent( pos-last ) );
-                        
                         last = pos;
                 }
-                pos = last + ( (100 - last) / 2 );
-                this.labels[i].update( pos, this.valueFromPercent( 100-last ) );
+                if ( this.labels.length ){
+                        this.labels[i].update( last + ( (100 - last) / 2 ),
+                                               this.valueFromPercent( 100-last ) );
+                }
                 return true;
         },
         valueFromPercent:function( perc ){
@@ -123,7 +124,7 @@ $.widget("ui.proportion", {
                 for ( var i=0,len=new_labels.length; i < len; i++ ){
                         if ('object' == typeof( new_labels[i] ) ){
                                 name  = new_labels[i].name;
-                                width = new_labels[i].value*scaleFactor;
+                                width = parseFloat(new_labels[i].value)*scaleFactor;
                         } else {
                                 name = new_labels[i];
                                 width = ( this.options.max / len )*scaleFactor;
